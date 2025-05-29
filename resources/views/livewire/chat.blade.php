@@ -31,7 +31,7 @@
             <!-- Chat Header -->
             <div class="flex items-center justify-between p-4 bg-gray-800 shadow-md">
                 <div>
-                    <h2 class="font-semibold text-lg text-gray-200">{{ $selectedUser->name }}</h2>
+                    <h2 class="font-semibold text-lg text-gray-200">{{ $selectedUser->name ?? '' }}</h2>
                 </div>
                 <div>
                     <button class="text-gray-400 hover:text-gray-200">
@@ -47,24 +47,30 @@
             <!-- Messages -->
             <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-900" id="chatMessages">
                 <!-- Incoming message -->
-                @foreach ($messages as $message)
-                    @if ($message->sender_id === $selectedUser->id)
-                        <div class="flex items-end">
-                            <div class="bg-gray-700 text-gray-200 p-3 rounded-lg shadow-md max-w-xs">
-                                <p class="text-sm">{{$message->message}}</p>
-                                <span class="text-xs text-gray-400 float-right">{{$message->created_at->diffForHumans()}}</span>
+                @if (empty($messages))
+                    <div class="text-gray-400 text-center">No messages yet</div>
+                @else
+                    @foreach ($messages as $message)
+                        @if ($message->sender_id === $selectedUser->id)
+                            <div class="flex items-end">
+                                <div class="bg-gray-700 text-gray-200 p-3 rounded-lg shadow-md max-w-xs">
+                                    <p class="text-sm">{{ $message->message }}</p>
+                                    <span
+                                        class="text-xs text-gray-400 float-right">{{ $message->created_at->diffForHumans() }}</span>
+                                </div>
                             </div>
-                        </div>
-                    @endif
-                    @if ($message->sender_id === auth()->user()->id)
-                        <div class="flex items-end justify-end">
-                            <div class="bg-blue-600 text-white p-3 rounded-lg shadow-md max-w-xs">
-                                <p class="text-sm">{{$message->message}}</p>
-                                <span class="text-xs text-blue-300 float-right">{{$message->created_at->diffForHumans()}}</span>
+                        @endif
+                        @if ($message->sender_id === auth()->user()->id)
+                            <div class="flex items-end justify-end">
+                                <div class="bg-blue-600 text-white p-3 rounded-lg shadow-md max-w-xs">
+                                    <p class="text-sm">{{ $message->message }}</p>
+                                    <span
+                                        class="text-xs text-blue-300 float-right">{{ $message->created_at->diffForHumans() }}</span>
+                                </div>
                             </div>
-                        </div>
-                    @endif
-                @endforeach
+                        @endif
+                    @endforeach
+                @endif
             </div>
 
             <!-- Input Area -->

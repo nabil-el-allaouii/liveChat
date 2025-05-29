@@ -21,6 +21,9 @@ class Chat extends Component
     }
     public function loadMessages()
     {
+        if(!$this->selectedUser) {
+            return;
+        }
         $this->messages = ChatMessage::query()->where(function ($query) {
             $query->where('sender_id', Auth::user()->id)
                 ->where('receiver_id', $this->selectedUser->id)
