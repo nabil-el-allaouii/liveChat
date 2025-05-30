@@ -1,0 +1,14 @@
+/* Modal animations */
+.modal-enter-active, .modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+.modal-enter-from, .modal-leave-to {
+  opacity: 0;
+}
+.modal-content-enter-active, .modal-content-leave-active {
+  transition: all 0.3s ease;
+}
+.modal-content-enter-from, .modal-content-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}

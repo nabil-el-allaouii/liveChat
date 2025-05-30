@@ -3,7 +3,15 @@
     <div class="w-64 bg-gray-800 border-r border-gray-700 flex flex-col">
         <!-- Search Box -->
         <div class="p-4 border-b border-gray-700">
-            <h2 class="font-semibold text-lg text-white">Contacts</h2>
+            <div class="flex justify-between items-center">
+                <h2 class="font-semibold text-lg text-white">Contacts</h2>
+                <button wire:click="$set('showCreateConversation',true)"
+                    class="bg-blue-600 text-white p-1.5 rounded-full hover:bg-blue-700 flex items-center justify-center">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </button>
+            </div>
+
             <div class="mt-2 relative">
                 <input type="text" placeholder="Search users..."
                     class="w-full px-3 py-2 border border-gray-600 bg-gray-700 rounded-md text-sm text-gray-200 placeholder-gray-400">
@@ -13,11 +21,15 @@
         <!-- Users List -->
         <ul class="flex-1 overflow-y-auto">
             <!-- Example of active user -->
-            @foreach ($users as $user)
+            @foreach ($conversations as $conversation)
+                @php
+                    $otherUser =
+                        $conversation->user_one_id === Auth::id() ? $conversation->userTwo : $conversation->userOne;
+                @endphp
                 <li
-                    class="flex items-center p-4 bg-gray-700 cursor-pointer {{ $selectedUser->id === $user->id ? 'border-l-4' : '' }} mt-2 border-green-600">
-                    <div wire:click="selectUser({{ $user->id }})" class="flex-1">
-                        <span class="font-medium text-gray-200">{{ $user->name }}</span>
+                    class="flex items-center p-4 bg-gray-700 cursor-pointer {{ isset($selectedUser) && $selectedUser->id === $otherUser->id ? 'border-l-4' : '' }} mt-2 border-green-600">
+                    <div wire:click="selectUser('{{ $otherUser->id }}')" class="flex-1">
+                        <span class="font-medium text-gray-200">{{ $otherUser->name }}</span>
                     </div>
                 </li>
             @endforeach
@@ -108,4 +120,15 @@
             </div>
         </div>
     </div>
+
+    
+    @if ($showCreateConversation)
+        <div
+            class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-70 transition-opacity duration-300">
+            <div class="fixed inset-0" wire:click="$dispatch('closeCreateConversation')"></div>
+            <div class="w-full max-w-md mx-4 transform transition-all duration-300 scale-100">
+                @livewire('create-conversation')
+            </div>
+        </div>
+    @endif
 </div>
